@@ -1,11 +1,11 @@
 # ChatDB
 HomeWork 25.7
-Консольный чат на языке C++ использующий базу данных MySQL
+Консольный чат на языке C++ использующий базу данных MySQL.
                 Для работы программы 
 Windows x64
 MySQL Connector/ODBC (версия драйвера MySQL ODBC 8.0 ANSI Driver)
 Visual Studio
-MySQL Server 8.0
+MySQL Server 8.0.
                 Данные для подключения
 DSN=chatdb 
 Server=localhost
