@@ -68,7 +68,6 @@ bool UserManager::loginPass(const std::string& first_name, const std::string& pa
     DatabaseManager dbManager;
 
     if (dbManager.connectToDatabase()) {
-        SQLRETURN ret;
         SQLHANDLE hstmt;
         SQLHANDLE hdbc = dbManager.getHDBC();
 
@@ -78,17 +77,16 @@ bool UserManager::loginPass(const std::string& first_name, const std::string& pa
 
         ret = SQLAllocHandle(SQL_HANDLE_STMT, hdbc, &hstmt);
         ret = SQLPrepareA(hstmt, (SQLCHAR*)queryLogin.c_str(), SQL_NTS);
-
-        // Change the parameter type to SQL_C_BINARY and SQL_VARBINARY if needed
         ret = SQLBindParameter(hstmt, 1, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 50, 0, (SQLCHAR*)first_name.c_str(), 0, NULL);
         ret = SQLBindParameter(hstmt, 2, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR, 32, 0, (SQLCHAR*)password_hash.c_str(), 0, NULL);
 
-        std::cout << "Executing SQL query..." << std::endl;
         ret = SQLExecute(hstmt);
 
-        SQLLEN user_id;
+        SQLINTEGER user_id;
+        ret = SQLBindCol(hstmt, 1, SQL_C_SLONG, &user_id, sizeof(user_id), NULL);
+
+        ret = SQLFetch(hstmt);
         if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO) {
-            ret = SQLGetData(hstmt, 1, SQL_C_LONG, &user_id, sizeof(user_id), NULL);
             std::cout << "Retrieved user_id: " << user_id << std::endl;
             if (user_id > 0) {
                 std::cout << "Login successful. User ID: " << user_id << std::endl;
@@ -114,6 +112,5 @@ bool UserManager::loginPass(const std::string& first_name, const std::string& pa
 
     return false;
 }
-
 
 

@@ -13,10 +13,10 @@ private:
     SQLHANDLE hstmt;
     SQLHDBC hdbc;
     struct User {
-        std::string firstName;
-        std::string lastName;
+        std::string first_name;
+        std::string last_name;
         std::string email;
-        std::string password;
+        std::string password_hash;
     };
 
     std::vector<User> users;
